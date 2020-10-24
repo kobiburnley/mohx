@@ -1,0 +1,26 @@
+{
+  "name": "mohx",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc --build tsconfig.build.json",
+    "lint": "eslint --ext .ts src"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^7.7.0",
+    "react": "^16.13.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.5"
+  },
+  "peerDependencies": {
+    "react": "*",
+    "tslib": "*"
+  }
+}
