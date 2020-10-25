@@ -1,6 +1,10 @@
 node_modules
 packages/*/lib
+packages/*/es
+packages/*/dist
 examples/*/lib
+examples/*/es
+examples/*/dist
 *.tsbuildinfo
 /coverage
 /.idea

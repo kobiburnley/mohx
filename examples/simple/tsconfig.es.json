@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "module": "ESNext",
+    "outDir": "es"
+  },
+  "references": [
+    {
+      "path": "../../packages/mohx/tsconfig.es.json"
+    }
+  ],
+  "include": ["src/**/*.ts*"]
+}

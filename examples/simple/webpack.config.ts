@@ -31,7 +31,6 @@ const config: Configuration = {
     ],
   },
   output: {
-    path: path.join(__dirname, "public"),
     // filename: "[name].[contenthash].js",
     filename: "[name].js",
   },
