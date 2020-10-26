@@ -1,14 +1,14 @@
-import { action, computed, makeObservable, observable } from "mobx"
+import { observable } from "mobx"
+import { initHooksProto } from "mohx"
 
+export interface CounterStoreParams {
+  value: number
+}
 export class CounterStore {
-  value = 0
+  @observable value: number
 
-  constructor() {
-    makeObservable(this, {
-      value: observable,
-      increment: action,
-      doubled: computed,
-    })
+  constructor(params: CounterStoreParams) {
+    this.value = params.value
   }
 
   increment = () => {
@@ -19,3 +19,5 @@ export class CounterStore {
     return this.value * 2 + 1
   }
 }
+
+initHooksProto(CounterStore)

@@ -17,6 +17,9 @@
   },
   "author": "",
   "license": "ISC",
+  "dependencies": {
+    "ts-trait": "^4.1.1"
+  },
   "devDependencies": {
     "eslint": "^7.7.0",
     "jest": "^26.1.0",

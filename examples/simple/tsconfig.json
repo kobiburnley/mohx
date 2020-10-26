@@ -9,7 +9,11 @@
     "jsx": "react",
     "importHelpers": true,
     "skipLibCheck": true,
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "baseUrl": ".",
+    "paths": {
+      "mohx/*": ["../../packages/mohx/src/*"]
+    }
   },
   "include": ["src/**/*.ts*"]
 }

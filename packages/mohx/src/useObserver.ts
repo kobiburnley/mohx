@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
-import { eventsPropertyKey } from "./symbols"
-import { HasMohxEvents } from "./hasMohxEvents"
+import { AtomsExtensions } from "./initHooksProto"
 
 export function useObserver<T, K extends keyof T>(store: T, keys: K[]) {
   const result: Partial<Record<K, T[K]>> = {}
@@ -8,14 +7,14 @@ export function useObserver<T, K extends keyof T>(store: T, keys: K[]) {
   for (const key of keys) {
     const [value, setValue] = useState(() => store[key])
     useEffect(() => {
-      const hasMohxEvents = (store as unknown) as HasMohxEvents
+      const hasMohxEvents = (store as unknown) as AtomsExtensions
       const listener = () => setValue(store[key])
-      hasMohxEvents[eventsPropertyKey as "_mohxEvents"].on(
+      hasMohxEvents.$AtomsExtensions_events.on(
         key as symbol | string,
         listener
       )
       return () => {
-        hasMohxEvents[eventsPropertyKey as "_mohxEvents"].off(
+        hasMohxEvents.$AtomsExtensions_events.off(
           key as symbol | string,
           listener
         )
