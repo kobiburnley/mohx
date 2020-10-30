@@ -27,16 +27,18 @@ export abstract class AtomsExtensions {
   }
 }
 
-function getMobxDecorators(clz: new (...args: any[]) => unknown) {
+function getMobxDecorators(
+  clz: new (...args: any[]) => unknown
+): Record<string, { annotationType_?: string }> {
   for (const symbol of Object.getOwnPropertySymbols(clz.prototype)) {
     if (symbol.toString() === "Symbol(mobx-decorators)") {
       return clz.prototype[symbol]
     }
   }
+  return {}
 }
 
 export function initHooksProto<T>(clz: new (...args: any[]) => T) {
-  console.log("initHooksProto")
   for (const prop of [
     ...Object.getOwnPropertyNames(AtomsExtensions.prototype),
     ...Object.getOwnPropertySymbols(AtomsExtensions.prototype),
@@ -51,26 +53,34 @@ export function initHooksProto<T>(clz: new (...args: any[]) => T) {
     )
   }
 
-  for (const [prop, observable] of Object.entries(
-    getMobxDecorators(clz)
-  ) as any) {
+  const mobxDecorators = getMobxDecorators(clz)
+
+  for (const [prop, observable] of Object.entries(mobxDecorators)) {
     if (observable.annotationType_ === "observable") {
       Object.defineProperty(clz.prototype, prop, {
         configurable: true,
         enumerable: true,
         get(this: AtomsExtensions) {
-          this.$AtomsExtensions_atoms[prop].reportObserved()
-          return this.$AtomsExtensions_super[prop]
+          const {
+            $AtomsExtensions_atoms: atoms,
+            $AtomsExtensions_super: supers,
+          } = this
+          atoms[prop].reportObserved()
+          return supers[prop]
         },
         set(this: AtomsExtensions, value: any) {
-          if (this.$AtomsExtensions_atoms[prop] == null) {
-            this.$AtomsExtensions_atoms[prop] = createAtom(prop)
+          const {
+            $AtomsExtensions_events: events,
+            $AtomsExtensions_atoms: atoms,
+            $AtomsExtensions_super: supers,
+          } = this
+          if (atoms[prop] == null) {
+            atoms[prop] = createAtom(prop)
           }
-          this.$AtomsExtensions_super[prop] = value
-          // console.log('set2', _this1, this)
-          this.$AtomsExtensions_atoms[prop].reportChanged()
-          this.$AtomsExtensions_events.emit(prop)
-          return this.$AtomsExtensions_super[prop]
+          supers[prop] = value
+          atoms[prop].reportChanged()
+          events.emit(prop)
+          return supers[prop]
         },
       })
     }

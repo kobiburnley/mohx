@@ -1,5 +1,4 @@
 import { observable } from "mobx"
-import { initHooksProto } from "mohx"
 
 export interface CounterStoreParams {
   value: number
@@ -19,5 +18,3 @@ export class CounterStore {
     return this.value * 2 + 1
   }
 }
-
-initHooksProto(CounterStore)

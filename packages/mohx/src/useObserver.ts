@@ -1,26 +1,29 @@
 import { useEffect, useState } from "react"
-import { AtomsExtensions } from "./initHooksProto"
+import { assertHasAtomsExtensions } from "./assertHasAtomsExtensions"
 
 export function useObserver<T, K extends keyof T>(store: T, keys: K[]) {
-  const result: Partial<Record<K, T[K]>> = {}
+  assertHasAtomsExtensions(store)
+
+  const [result] = useState<Partial<Record<K, T[K]>>>({})
 
   for (const key of keys) {
-    const [value, setValue] = useState(() => store[key])
+    const [, setValue] = useState(() => {
+      const v = store[key]
+      result[key] = v
+      return v
+    })
     useEffect(() => {
-      const hasMohxEvents = (store as unknown) as AtomsExtensions
-      const listener = () => setValue(store[key])
-      hasMohxEvents.$AtomsExtensions_events.on(
-        key as symbol | string,
-        listener
-      )
+      const { $AtomsExtensions_events: events } = store
+      const listener = () => {
+        const v = store[key]
+        result[key] = v
+        setValue(store[key])
+      }
+      events.on(key as symbol | string, listener)
       return () => {
-        hasMohxEvents.$AtomsExtensions_events.off(
-          key as symbol | string,
-          listener
-        )
+        events.off(key as symbol | string, listener)
       }
     }, [])
-    result[key] = value
   }
 
   return result as Record<K, T[K]>

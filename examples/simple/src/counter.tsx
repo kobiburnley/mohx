@@ -1,8 +1,8 @@
 import * as React from "react"
 import { memo } from "react"
-import { CounterStore } from "./counterStore"
 import { useObserver, useStore } from "mohx"
 import { Doubled } from "./doubled"
+import { CounterStore } from "./stores"
 
 export const Counter = memo(function CounterC({
   store,
@@ -13,7 +13,7 @@ export const Counter = memo(function CounterC({
 }) {
   const { value } = useObserver(store, ["value"])
 
-  const anotherCounter = useStore(() => new CounterStore({value: 0}))
+  const anotherCounter = useStore(() => new CounterStore({ value: 0 }))
 
   return (
     <>
